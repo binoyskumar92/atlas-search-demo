@@ -18,6 +18,16 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
             })
             
           })
+        app.get('/search/:input', async (req, res) => {
+            param = req.params['input'];
+            const collection = client.db('search').collection('person');
+            const aggCursor = collection.aggregate([{ "$search": { "text": { "path": { "wildcard": "*" }, "query": param }}}]);
+            responseArr =[]
+            for await (const doc of aggCursor) {
+                responseArr.push(doc)
+            }
+            res.send(responseArr)
+          })
     })
 
     app.listen(port, () => console.log(`Example app listening on port ${port}!`))
