@@ -1,15 +1,18 @@
+const backendUrl = 'http://localhost:6767/';
 async function search() {
     try {
-        const response = await fetch('http://localhost:6767')
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data)
-        let output = '';
-        data.forEach(e => {
-            output +=
-`                <div class="flex flex-col border p-2 m-1 rounded-md bg-[#ebf3d8]">
+        const searchInput = document.getElementById('search-input').value
+        if (searchInput) {
+            const response = await fetch(backendUrl + 'search/' + searchInput);
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log(data)
+            let output = '';
+            data.forEach(e => {
+                output +=
+                    `                <div class="flex flex-col border p-2 m-1 rounded-md bg-[#ebf3d8]">
                     <div class="flex">
                         <label class="font-bold">Movie name:&nbsp</label>
                         <div>${e.title}</div>
@@ -20,7 +23,7 @@ async function search() {
                     </div>
                     <div class="flex">
                         <label class="font-bold">Genre:&nbsp</label>
-                        <div>${e.genres.join(',')}</div>
+                        <div>${e.genres && e.genres.join(',')}</div>
                     </div>
                     <div class="flex">
                         <label class="font-bold">Year:&nbsp</label>
@@ -33,12 +36,16 @@ async function search() {
 
                 </div>`
 
-        });
-
-        document.getElementById('data').classList.remove("hidden")
-        document.getElementById('data').classList.add("flex")
-        document.getElementById("data").innerHTML = output;
-
+            });
+            if (!output) {
+                output = `<div class="flex justify-center">
+                    No results to show
+                </div>`
+            }
+            document.getElementById('data').classList.remove("hidden")
+            document.getElementById('data').classList.add("flex")
+            document.getElementById("data").innerHTML = output;
+        }
     }
     catch (error) {
         console.error(`Could not complete the request: ${error}`);
