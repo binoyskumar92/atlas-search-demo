@@ -18,6 +18,18 @@ async function search() {
                         <label class="font-bold">Plot:&nbsp</label>
                         <div>${e.plot}</div>
                     </div>
+                    <div class="flex">
+                        <label class="font-bold">Genre:&nbsp</label>
+                        <div>${e.genres.join(',')}</div>
+                    </div>
+                    <div class="flex">
+                        <label class="font-bold">Year:&nbsp</label>
+                        <div>${e.year}</div>
+                    </div>
+                    <div class="flex">
+                        <label class="font-bold">IMDB rating:&nbsp</label>
+                        <div>${e.imdb.rating}</div>
+                    </div>
 
                 </div>`
 
