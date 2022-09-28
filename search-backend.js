@@ -18,10 +18,11 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
             })
             
           })
-        app.get('/search/:input', async (req, res) => {
-            param = req.params['input'];
+        app.get('/search/:type/:query', async (req, res) => {
+            const type = req.params['type'];
+            const query = req.params['query'];
             const collection = client.db('sample_mflix').collection('movies');
-            const aggCursor = collection.aggregate([{ "$search": { "text": { "path": { "wildcard": "*" }, "query": param }}}]);
+            const aggCursor = collection.aggregate(getSearchAggregationBasedOnType(type,query));
             responseArr =[]
             for await (const doc of aggCursor) {
                 responseArr.push(doc)
@@ -29,5 +30,19 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
             res.send(responseArr)
           })
     })
-
+function getSearchAggregationBasedOnType(type, query){
+const aggregation = []
+switch(type){
+    case 'Normal':
+        aggregation.push({ "$search": { "text": { "path": { "wildcard": "*" }, "query": query }}})
+        break;
+    case 'Indexed':
+        break;
+    case 'Fuzzy':
+        break;
+    case 'Boosted':
+        break;
+}
+return aggregation;
+}
     app.listen(port, () => console.log(`Example app listening on port ${port}!`))

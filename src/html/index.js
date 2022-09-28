@@ -1,14 +1,14 @@
-const backendUrl = 'http://localhost:6767/';
+const backendUrl = 'http://localhost:6767';
 async function search() {
     try {
         const searchInput = document.getElementById('search-input').value
         if (searchInput) {
-            const response = await fetch(backendUrl + 'search/' + searchInput);
+            const response = await fetch(`${backendUrl}/search/${getCheckedRadioButtonLabelValue()}/${searchInput}`);
             if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`);
             }
             const data = await response.json();
-            console.log(data)
+            console.log(data) 
             let output = '';
             data.forEach(e => {
                 output +=
@@ -56,4 +56,13 @@ function clearPage() {
     document.getElementById('data').classList.remove("flex")
     document.getElementById('data').classList.add("hidden")
     document.getElementById('data').innerHTML = ''
+}
+
+function getCheckedRadioButtonLabelValue(){
+    const radioElements = document.getElementsByName("feature-selection");
+    for(elem of radioElements){
+        if(elem.checked){
+            return elem.labels[0].innerHTML
+        }
+    }
 }
