@@ -22,12 +22,16 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
             const type = req.params['type'];
             const query = req.params['query'];
             const collection = client.db('sample_mflix').collection('movies');
-            const aggCursor = collection.aggregate(getSearchAggregationBasedOnType(type,query));
+            const aggregateQuery = getSearchAggregationBasedOnType(type,query)
+            if(aggregateQuery.length>0){
+            const aggCursor = collection.aggregate(aggregateQuery);
+            
             responseArr =[]
             for await (const doc of aggCursor) {
                 responseArr.push(doc)
             }
             res.send(responseArr)
+            }
           })
     })
 function getSearchAggregationBasedOnType(type, query){
@@ -43,6 +47,6 @@ switch(type){
     case 'Boosted':
         break;
 }
-return aggregation;
+return aggregation
 }
     app.listen(port, () => console.log(`Example app listening on port ${port}!`))
