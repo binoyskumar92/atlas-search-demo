@@ -18,5 +18,5 @@ To get the backend server up and running, use:
 
 ```node search-backend.js```
 
-## 5. Launcing UI
+## 5. Launching UI
 Run ```localhost:8282``` and access the index.html file to load the search UI
